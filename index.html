@@ -1,55 +1,133 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#faf8ef">
-<title>2048 - Number Puzzle</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2048 - Special Edition</title>
 <style>
-:root{--bg:#faf8ef;--ink:#776e65;--board:#bbada0;--empty:#cdc1b4;--accent:#edc22e}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh;display:flex;justify-content:center;padding:28px 14px}
-main{width:min(100%,500px)}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
-h1{font-size:clamp(42px,12vw,68px);line-height:1;margin:0;font-weight:850;letter-spacing:-4px}
-.scores{display:flex;gap:8px}
-.scorebox{background:#bbada0;color:white;border-radius:7px;padding:8px 13px;min-width:78px;text-align:center;font-weight:800}
-.scorebox small{display:block;font-size:11px;letter-spacing:1px;opacity:.85}
-.scorebox span{font-size:23px}
-.topline{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0 16px}
-p{margin:0;font-size:15px;line-height:1.45}
-button{border:0;border-radius:7px;background:#8f7a66;color:white;font-weight:800;padding:11px 15px;font-size:14px;cursor:pointer}
-button:hover{filter:brightness(1.08)}
-button:focus-visible{outline:3px solid #edc22e;outline-offset:3px}
-.board-wrap{position:relative;background:var(--board);padding:10px;border-radius:9px;touch-action:none;user-select:none}
-.board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.cell{aspect-ratio:1;background:var(--empty);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:clamp(25px,7vw,43px);font-weight:850;letter-spacing:-1px;color:#776e65;transition:background .08s}
+body{
+ margin:0;padding:24px 12px;min-height:100vh;
+ display:flex;justify-content:center;
+ background:linear-gradient(135deg,#fff8e8,#f5e6ff);
+ color:#776e65;font-family:Arial,sans-serif;
+}
+main{width:min(100%,480px)}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+h1{font-size:65px;margin:0;color:#edb92e;font-weight:900;text-shadow:2px 3px #fff}
+.scores{display:flex;gap:7px}
+.scorebox{
+ background:#8f7a66;color:white;border-radius:9px;
+ padding:8px 12px;text-align:center;min-width:75px;
+ box-shadow:0 3px 8px #0002
+}
+.scorebox small{display:block;font-size:11px}
+.scorebox span{font-size:23px;font-weight:bold}
+.topline{display:flex;justify-content:space-between;align-items:center;margin:14px 0}
+button{
+ border:0;border-radius:9px;background:#8f7a66;color:white;
+ padding:12px 15px;font-weight:bold;cursor:pointer;
+ box-shadow:0 3px 7px #0002
+}
+button:active{transform:scale(.96)}
+.board-wrap{
+ position:relative;background:#bbada0;padding:10px;border-radius:13px;
+ touch-action:none;user-select:none;
+ box-shadow:0 8px 22px #0002
+}
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.cell{
+ aspect-ratio:1;border-radius:7px;background:#cdc1b4;
+ display:flex;align-items:center;justify-content:center;
+ font-size:clamp(24px,7vw,42px);font-weight:900;
+ position:relative;color:#776e65
+}
 .cell[data-value="2"]{background:#eee4da}
 .cell[data-value="4"]{background:#ede0c8}
-.cell[data-value="8"]{background:#f2b179;color:#fff}
-.cell[data-value="16"]{background:#f59563;color:#fff}
-.cell[data-value="32"]{background:#f67c5f;color:#fff}
-.cell[data-value="64"]{background:#f65e3b;color:#fff}
-.cell[data-value="128"]{background:#edcf72;color:#fff;font-size:clamp(21px,5.5vw,34px)}
-.cell[data-value="256"]{background:#edcc61;color:#fff;font-size:clamp(21px,5.5vw,34px)}
-.cell[data-value="512"]{background:#edc850;color:#fff;font-size:clamp(21px,5.5vw,34px)}
-.cell[data-value="1024"]{background:#edc53f;color:#fff;font-size:clamp(17px,4.7vw,28px)}
-.cell[data-value="2048"]{background:#edc22e;color:#fff;font-size:clamp(17px,4.7vw,28px);box-shadow:0 0 0 3px #fff3}
-.cell.high{background:#3c3a32;color:#fff;font-size:clamp(17px,4.7vw,28px)}
-.overlay{position:absolute;inset:0;background:#faf8efcc;border-radius:9px;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px}
-.overlay.show{display:flex}
-.overlay h2{font-size:42px;margin:0 0 8px}
-.overlay p{margin-bottom:16px}
-.help{margin-top:18px;font-size:14px}
-.help strong{font-weight:800}
-.mobile-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;width:190px;margin:16px auto 0}
-.mobile-controls button{padding:13px 0;font-size:20px}
+.cell[data-value="8"]{background:#f2b179;color:white}
+.cell[data-value="16"]{background:#f59563;color:white}
+.cell[data-value="32"]{background:#f67c5f;color:white}
+.cell[data-value="64"]{background:#f65e3b;color:white}
+.cell[data-value="128"]{background:#edcf72;color:white;font-size:30px}
+.cell[data-value="256"]{background:#edcc61;color:white;font-size:30px}
+.cell[data-value="512"]{background:#edc850;color:white;font-size:30px}
+.cell[data-value="1024"]{background:#edc53f;color:white;font-size:25px}
+.cell[data-value="2048"]{background:#edc22e;color:white;font-size:25px}
+.cell.high{background:#3c3a32;color:white;font-size:25px}
+
+/* 合体アニメーション */
+.cell.merge-pop{
+ z-index:3;
+ border:3px solid #fff6a5;
+ animation:mergePop .5s cubic-bezier(.2,1.8,.4,1);
+ box-shadow:0 0 15px 6px #fff4a8,0 0 32px 12px #ffbd24;
+}
+@keyframes mergePop{
+ 0%{transform:scale(.65) rotate(-8deg);filter:brightness(1)}
+ 35%{transform:scale(1.4) rotate(6deg);filter:brightness(2)}
+ 65%{transform:scale(.9) rotate(-3deg);filter:brightness(1.5)}
+ 100%{transform:scale(1) rotate(0);filter:brightness(1)}
+}
+.cell.merge-pop::after{
+ content:"✦";
+ position:absolute;
+ top:-12px;right:-7px;
+ color:#fff;
+ font-size:28px;
+ text-shadow:0 0 9px gold;
+ animation:sparkle .55s ease-out forwards;
+ pointer-events:none;
+}
+@keyframes sparkle{
+ 0%{transform:scale(.2) rotate(0);opacity:0}
+ 40%{transform:scale(1.8) rotate(100deg);opacity:1}
+ 100%{transform:scale(.2) rotate(220deg);opacity:0}
+}
+.board-wrap.merge-shake{animation:shake .3s}
+@keyframes shake{
+ 0%,100%{transform:translateX(0)}
+ 20%{transform:translateX(-5px)}
+ 40%{transform:translateX(5px)}
+ 60%{transform:translateX(-3px)}
+ 80%{transform:translateX(3px)}
+}
+
+/* キラキラ粒子 */
+.particle{
+ position:absolute;z-index:5;pointer-events:none;
+ font-size:22px;color:#ffe45c;
+ animation:particleFly .75s ease-out forwards;
+}
+@keyframes particleFly{
+ 0%{transform:translate(0,0) scale(.3) rotate(0);opacity:1}
+ 100%{transform:translate(var(--dx),var(--dy)) scale(1.3) rotate(180deg);opacity:0}
+}
+.overlay{
+ position:absolute;inset:0;border-radius:13px;
+ background:#fff2d9ed;display:none;
+ align-items:center;justify-content:center;
+ flex-direction:column;text-align:center;padding:20px;
+ z-index:10
+}
+.overlay.show{display:flex;animation:overlayIn .35s ease-out}
+@keyframes overlayIn{
+ from{opacity:0;transform:scale(.8)}
+ to{opacity:1;transform:scale(1)}
+}
+.overlay h2{font-size:38px;color:#d69c18;margin:0 0 10px}
+.overlay p{margin:0 0 18px;line-height:1.5}
+.help{font-size:14px;line-height:1.6;margin-top:18px}
+.mobile-controls{
+ display:grid;grid-template-columns:repeat(3,1fr);
+ gap:7px;width:190px;margin:16px auto
+}
+.mobile-controls button{font-size:21px;padding:12px}
 .mobile-controls button:nth-child(1){grid-column:2}
 .mobile-controls button:nth-child(2){grid-column:1;grid-row:2}
 .mobile-controls button:nth-child(3){grid-column:2;grid-row:2}
 .mobile-controls button:nth-child(4){grid-column:3;grid-row:2}
-footer{margin-top:18px;font-size:12px;opacity:.8;text-align:center}
+footer{text-align:center;font-size:12px;margin-top:18px}
 @media(min-width:600px){.mobile-controls{display:none}}
 </style>
 </head>
@@ -64,42 +142,45 @@ footer{margin-top:18px;font-size:12px;opacity:.8;text-align:center}
 </header>
 
 <div class="topline">
-<p>数字を合わせて <strong>2048</strong> を作ろう！</p>
+<strong>✨ 2048を目指そう！</strong>
 <button id="restart">新しく始める</button>
 </div>
 
-<section class="board-wrap" aria-label="2048 game board">
-<div class="board" id="board" role="grid" aria-label="4 by 4 grid"></div>
+<section class="board-wrap">
+<div class="board" id="board"></div>
 <div class="overlay" id="overlay">
-<h2 id="overlay-title">ゲーム終了</h2>
+<h2 id="overlay-title"></h2>
 <p id="overlay-text"></p>
 <button id="overlay-button">もう一度遊ぶ</button>
 </div>
 </section>
 
-<div class="mobile-controls" aria-label="方向ボタン">
-<button data-dir="up" aria-label="上">↑</button>
-<button data-dir="left" aria-label="左">←</button>
-<button data-dir="down" aria-label="下">↓</button>
-<button data-dir="right" aria-label="右">→</button>
+<div class="mobile-controls">
+<button data-dir="up">↑</button>
+<button data-dir="left">←</button>
+<button data-dir="down">↓</button>
+<button data-dir="right">→</button>
 </div>
 
 <div class="help">
-<strong>遊び方：</strong>
-矢印キー（スマホは方向ボタン）で盤面を動かします。同じ数字がぶつかると合体し、数字が2倍になります。1回の移動で同じタイルは1度だけ合体します。空きマスがなく、どの方向にも動けなくなるとゲームオーバーです。
+<strong>遊び方</strong><br>
+矢印キー・WASD・スマホのスワイプで操作。同じ数字を合わせると合体！合体時には豪華なエフェクトが発生するよ。2048を作ろう！
 </div>
-<footer>2048 Number Puzzle · Your best score is saved on this device.</footer>
+<footer>2048 SPECIAL EDITION ✨</footer>
 </main>
 
 <script>
-(() => {
+(()=>{
  const SIZE=4;
  const boardEl=document.getElementById('board');
  const scoreEl=document.getElementById('score');
  const bestEl=document.getElementById('best');
  const overlay=document.getElementById('overlay');
+ const wrap=document.querySelector('.board-wrap');
 
- let grid,score,best=Number(localStorage.getItem('2048-best')||0),over=false,won=false;
+ let grid,score,best=Number(localStorage.getItem('2048-best')||0);
+ let over=false,won=false;
+
  bestEl.textContent=best;
 
  const empty=()=>Array.from({length:SIZE},()=>Array(SIZE).fill(0));
@@ -111,25 +192,57 @@ footer{margin-top:18px;font-size:12px;opacity:.8;text-align:center}
        if(!grid[r][c])spaces.push([r,c]);
 
    if(!spaces.length)return;
+
    const [r,c]=spaces[Math.floor(Math.random()*spaces.length)];
    grid[r][c]=Math.random()<.9?2:4;
  }
 
- function render(){
+ function particles(cell){
+   const rect=cell.getBoundingClientRect();
+   const parent=wrap.getBoundingClientRect();
+
+   for(let i=0;i<9;i++){
+     const p=document.createElement('span');
+     p.className='particle';
+     p.textContent=['✦','✨','★','✧'][i%4];
+     p.style.left=(rect.left-parent.left+rect.width/2)+'px';
+     p.style.top=(rect.top-parent.top+rect.height/2)+'px';
+     p.style.setProperty('--dx',(Math.random()*100-50)+'px');
+     p.style.setProperty('--dy',(Math.random()*100-50)+'px');
+     wrap.appendChild(p);
+     setTimeout(()=>p.remove(),800);
+   }
+ }
+
+ function render(mergedCells=[]){
    boardEl.innerHTML='';
-   for(let r=0;r<SIZE;r++)
+
+   for(let r=0;r<SIZE;r++){
      for(let c=0;c<SIZE;c++){
        const v=grid[r][c];
        const cell=document.createElement('div');
-       cell.className='cell'+(v>2048?' high':'');
-       cell.setAttribute('role','gridcell');
+       const merged=mergedCells.some(p=>p[0]===r&&p[1]===c);
+
+       cell.className='cell'+(v>2048?' high':'')+(merged?' merge-pop':'');
        if(v)cell.dataset.value=String(v);
        cell.textContent=v||'';
-       cell.setAttribute('aria-label',v?String(v):'empty');
+       cell.setAttribute('role','gridcell');
        boardEl.appendChild(cell);
+
+       if(merged){
+         particles(cell);
+       }
      }
+   }
+
    scoreEl.textContent=score;
    bestEl.textContent=best;
+
+   if(mergedCells.length){
+     wrap.classList.remove('merge-shake');
+     void wrap.offsetWidth;
+     wrap.classList.add('merge-shake');
+   }
  }
 
  function start(){
@@ -146,11 +259,13 @@ footer{margin-top:18px;font-size:12px;opacity:.8;text-align:center}
  function slideLine(line){
    const values=line.filter(Boolean);
    const out=[];
+   const mergedIndices=[];
    let gained=0;
 
    for(let i=0;i<values.length;i++){
      if(values[i]===values[i+1]){
        const merged=values[i]*2;
+       mergedIndices.push(out.length);
        out.push(merged);
        gained+=merged;
        i++;
@@ -160,7 +275,7 @@ footer{margin-top:18px;font-size:12px;opacity:.8;text-align:center}
    }
 
    while(out.length<SIZE)out.push(0);
-   return {line:out,gained};
+   return {line:out,gained,mergedIndices};
  }
 
  function move(dir){
@@ -168,17 +283,19 @@ footer{margin-top:18px;font-size:12px;opacity:.8;text-align:center}
 
    const next=empty();
    let gained=0;
+   const mergedCells=[];
 
    for(let i=0;i<SIZE;i++){
      let line=[];
 
-     for(let j=0;j<SIZE;j++)
+     for(let j=0;j<SIZE;j++){
        line.push(
          dir==='left'?grid[i][j]:
          dir==='right'?grid[i][SIZE-1-j]:
          dir==='up'?grid[j][i]:
          grid[SIZE-1-j][i]
        );
+     }
 
      const result=slideLine(line);
      gained+=result.gained;
@@ -190,6 +307,14 @@ footer{margin-top:18px;font-size:12px;opacity:.8;text-align:center}
                dir==='left'?j:SIZE-1-j;
        next[r][c]=result.line[j];
      }
+
+     result.mergedIndices.forEach(j=>{
+       const r=dir==='left'||dir==='right'?i:
+               dir==='up'?j:SIZE-1-j;
+       const c=dir==='up'||dir==='down'?i:
+               dir==='left'?j:SIZE-1-j;
+       mergedCells.push([r,c]);
+     });
    }
 
    if(next.every((row,r)=>row.every((v,c)=>v===grid[r][c])))return;
@@ -203,59 +328,53 @@ footer{margin-top:18px;font-size:12px;opacity:.8;text-align:center}
    }
 
    spawn();
-   render();
+   render(mergedCells);
 
    if(!won&&grid.some(row=>row.includes(2048))){
      won=true;
      showOverlay(
-       '2048達成！',
-       'おめでとう！続けてプレイすることもできます。',
-       '続ける',
+       '🎉 2048達成！',
+       '✨ おめでとう！すごい！ ✨',
+       '続けて遊ぶ',
        true
      );
    }else if(!canMove()){
      over=true;
      showOverlay(
        'ゲームオーバー',
-       'おつかれさま！もう一度挑戦してみよう。',
+       'もう一度チャレンジしてみよう！',
        'もう一度遊ぶ'
      );
    }
  }
 
  function canMove(){
-   for(let r=0;r<SIZE;r++)
+   for(let r=0;r<SIZE;r++){
      for(let c=0;c<SIZE;c++){
        if(!grid[r][c])return true;
        if(c<SIZE-1&&grid[r][c]===grid[r][c+1])return true;
        if(r<SIZE-1&&grid[r][c]===grid[r+1][c])return true;
      }
+   }
    return false;
  }
 
  function showOverlay(title,msg,button,continueMode=false){
    document.getElementById('overlay-title').textContent=title;
    document.getElementById('overlay-text').textContent=msg;
-
    const b=document.getElementById('overlay-button');
    b.textContent=button;
    b.onclick=()=>{
      overlay.classList.remove('show');
      if(!continueMode)start();
    };
-
    overlay.classList.add('show');
  }
 
  const keys={
-   ArrowUp:'up',
-   ArrowDown:'down',
-   ArrowLeft:'left',
-   ArrowRight:'right',
-   w:'up',
-   s:'down',
-   a:'left',
-   d:'right'
+   ArrowUp:'up',ArrowDown:'down',
+   ArrowLeft:'left',ArrowRight:'right',
+   w:'up',s:'down',a:'left',d:'right'
  };
 
  document.addEventListener('keydown',e=>{
@@ -269,12 +388,11 @@ footer{margin-top:18px;font-size:12px;opacity:.8;text-align:center}
 
  document.getElementById('restart').addEventListener('click',start);
 
- document.querySelectorAll('[data-dir]').forEach(b=>
-   b.addEventListener('click',()=>move(b.dataset.dir))
- );
+ document.querySelectorAll('[data-dir]').forEach(b=>{
+   b.addEventListener('click',()=>move(b.dataset.dir));
+ });
 
  let touch=null;
- const wrap=document.querySelector('.board-wrap');
 
  wrap.addEventListener('touchstart',e=>{
    const t=e.changedTouches[0];
@@ -283,7 +401,6 @@ footer{margin-top:18px;font-size:12px;opacity:.8;text-align:center}
 
  wrap.addEventListener('touchend',e=>{
    if(!touch)return;
-
    const t=e.changedTouches[0];
    const dx=t.clientX-touch[0];
    const dy=t.clientY-touch[1];
@@ -291,11 +408,9 @@ footer{margin-top:18px;font-size:12px;opacity:.8;text-align:center}
 
    if(Math.max(Math.abs(dx),Math.abs(dy))<24)return;
 
-   move(
-     Math.abs(dx)>Math.abs(dy)?
+   move(Math.abs(dx)>Math.abs(dy)?
      (dx>0?'right':'left'):
-     (dy>0?'down':'up')
-   );
+     (dy>0?'down':'up'));
  },{passive:true});
 
  start();
