@@ -1,28 +1,61 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>2048 Special Edition</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:24px 12px;min-height:100vh;display:flex;justify-content:center;background:linear-gradient(135deg,#fff8e8,#f5e6ff);color:#776e65;font-family:Arial,sans-serif;transition:.25s}
-body.dark{background:linear-gradient(135deg,#151923,#29233c);color:#eee8df;color-scheme:dark}
+body{
+ margin:0;padding:22px 12px;min-height:100vh;
+ display:flex;justify-content:center;
+ background:linear-gradient(135deg,#fff8e8,#f0ddff);
+ color:#776e65;font-family:Arial,sans-serif;
+ transition:.25s
+}
+body.dark{
+ background:linear-gradient(135deg,#151923,#29233c);
+ color:#eee8df;color-scheme:dark
+}
 main{width:min(100%,480px)}
 header{display:flex;justify-content:space-between;align-items:center;gap:8px}
 h1{font-size:65px;margin:0;color:#edb92e;font-weight:900}
 .scores{display:flex;gap:7px}
-.scorebox{background:#8f7a66;color:white;border-radius:9px;padding:8px 12px;text-align:center;min-width:75px}
+.scorebox{
+ background:#8f7a66;color:white;border-radius:9px;
+ padding:8px 12px;text-align:center;min-width:75px
+}
 .scorebox small{display:block;font-size:11px}
 .scorebox span{font-size:23px;font-weight:bold}
-.topline{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:14px 0;flex-wrap:wrap}
-.actions{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
-button{border:0;border-radius:9px;background:#8f7a66;color:white;padding:11px 13px;font-weight:bold;cursor:pointer;box-shadow:0 3px 7px #0002}
+.topline{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:8px;margin:14px 0;flex-wrap:wrap
+}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+button{
+ border:0;border-radius:9px;background:#8f7a66;color:white;
+ padding:11px 13px;font-weight:bold;cursor:pointer;
+ box-shadow:0 3px 7px #0002
+}
 button:active{transform:scale(.96)}
-.board-wrap{position:relative;background:#bbada0;padding:10px;border-radius:13px;touch-action:none;user-select:none;box-shadow:0 8px 22px #0002}
+textarea{
+ width:100%;padding:12px;border:2px solid #bbada0;
+ border-radius:9px;font-size:13px;resize:vertical;
+ margin-bottom:9px;font-family:monospace
+}
+.board-wrap{
+ position:relative;background:#bbada0;padding:10px;
+ border-radius:13px;touch-action:none;user-select:none;
+ box-shadow:0 8px 22px #0002
+}
 .board{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
-.cell{aspect-ratio:1;border-radius:7px;background:#cdc1b4;display:flex;align-items:center;justify-content:center;font-size:clamp(24px,7vw,42px);font-weight:900;position:relative;color:#776e65}
+.cell{
+ aspect-ratio:1;border-radius:7px;background:#cdc1b4;
+ display:flex;align-items:center;justify-content:center;
+ font-size:clamp(24px,7vw,42px);font-weight:900;
+ position:relative;color:#776e65
+}
 .cell[data-value="2"]{background:#eee4da}
 .cell[data-value="4"]{background:#ede0c8}
 .cell[data-value="8"]{background:#f2b179;color:white}
@@ -35,22 +68,61 @@ button:active{transform:scale(.96)}
 .cell[data-value="1024"]{background:#edc53f;color:white;font-size:25px}
 .cell[data-value="2048"]{background:#edc22e;color:white;font-size:25px}
 .cell.high{background:#3c3a32;color:white;font-size:25px}
-.cell.merge-pop{z-index:3;border:3px solid #fff6a5;animation:pop .5s cubic-bezier(.2,1.8,.4,1);box-shadow:0 0 15px 6px #fff4a8,0 0 32px 12px #ffbd24}
-@keyframes pop{0%{transform:scale(.65) rotate(-8deg)}35%{transform:scale(1.4) rotate(6deg);filter:brightness(2)}65%{transform:scale(.9)}100%{transform:scale(1)}}
-.cell.merge-pop:after{content:"✦";position:absolute;top:-12px;right:-7px;color:white;font-size:28px;text-shadow:0 0 9px gold;animation:spark .55s ease-out;pointer-events:none}
-@keyframes spark{0%{transform:scale(.2) rotate(0);opacity:0}40%{transform:scale(1.8) rotate(100deg);opacity:1}100%{transform:scale(.2) rotate(220deg);opacity:0}}
+.cell.merge-pop{
+ z-index:3;border:3px solid #fff6a5;
+ animation:pop .5s cubic-bezier(.2,1.8,.4,1);
+ box-shadow:0 0 15px 6px #fff4a8,0 0 32px 12px #ffbd24
+}
+@keyframes pop{
+ 0%{transform:scale(.65) rotate(-8deg)}
+ 35%{transform:scale(1.4) rotate(6deg);filter:brightness(2)}
+ 65%{transform:scale(.9)}
+ 100%{transform:scale(1)}
+}
+.cell.merge-pop:after{
+ content:"✦";position:absolute;top:-12px;right:-7px;
+ color:white;font-size:28px;text-shadow:0 0 9px gold;
+ animation:spark .55s ease-out;pointer-events:none
+}
+@keyframes spark{
+ 0%{transform:scale(.2) rotate(0);opacity:0}
+ 40%{transform:scale(1.8) rotate(100deg);opacity:1}
+ 100%{transform:scale(.2) rotate(220deg);opacity:0}
+}
 .board-wrap.merge-shake{animation:shake .3s}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
-.particle{position:absolute;z-index:5;pointer-events:none;font-size:22px;color:#ffe45c;animation:fly .75s ease-out forwards}
-@keyframes fly{to{transform:translate(var(--dx),var(--dy)) scale(1.3) rotate(180deg);opacity:0}}
-.overlay{position:absolute;inset:0;border-radius:13px;background:#fff2d9ed;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:20px;z-index:10}
+@keyframes shake{
+ 0%,100%{transform:translateX(0)}
+ 20%{transform:translateX(-5px)}
+ 40%{transform:translateX(5px)}
+ 60%{transform:translateX(-3px)}
+ 80%{transform:translateX(3px)}
+}
+.particle{
+ position:absolute;z-index:5;pointer-events:none;
+ font-size:22px;color:#ffe45c;animation:fly .75s ease-out forwards
+}
+@keyframes fly{
+ to{transform:translate(var(--dx),var(--dy)) scale(1.3) rotate(180deg);opacity:0}
+}
+.overlay{
+ position:absolute;inset:0;border-radius:13px;
+ background:#fff2d9ed;display:none;align-items:center;
+ justify-content:center;flex-direction:column;
+ text-align:center;padding:20px;z-index:10
+}
 .overlay.show{display:flex;animation:in .35s ease-out}
-@keyframes in{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+@keyframes in{
+ from{opacity:0;transform:scale(.8)}
+ to{opacity:1;transform:scale(1)}
+}
 .overlay h2{font-size:38px;color:#d69c18;margin:0 0 10px}
 .overlay p{margin:0 0 18px;line-height:1.5}
-.help{font-size:14px;line-height:1.7;margin-top:18px}
+.help{font-size:14px;line-height:1.8;margin-top:18px}
 footer{text-align:center;font-size:12px;margin-top:18px}
-.mobile-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;width:190px;margin:16px auto}
+.mobile-controls{
+ display:grid;grid-template-columns:repeat(3,1fr);
+ gap:7px;width:190px;margin:16px auto
+}
 .mobile-controls button{font-size:21px;padding:12px}
 .mobile-controls button:nth-child(1){grid-column:2}
 .mobile-controls button:nth-child(2){grid-column:1;grid-row:2}
@@ -63,8 +135,13 @@ body.dark .cell{background:#485162;color:#f1eee9}
 body.dark .cell[data-value="2"]{background:#d8d1c8;color:#554d45}
 body.dark .cell[data-value="4"]{background:#c9b99f;color:#554d45}
 body.dark .overlay{background:#202635f2}
+body.dark textarea{background:#252c3b;color:white;border-color:#59677e}
 @media(min-width:600px){.mobile-controls{display:none}}
-@media(max-width:380px){h1{font-size:52px}.scorebox{min-width:65px;padding:7px}.scorebox span{font-size:19px}}
+@media(max-width:380px){
+ h1{font-size:52px}
+ .scorebox{min-width:65px;padding:7px}
+ .scorebox span{font-size:19px}
+}
 </style>
 </head>
 <body>
@@ -72,190 +149,376 @@ body.dark .overlay{background:#202635f2}
 <header>
 <h1>2048</h1>
 <div class="scores">
-<div class="scorebox"><small>SCORE</small><span id="score">0</span></div>
-<div class="scorebox"><small>BEST</small><span id="best">0</span></div>
+ <div class="scorebox"><small>SCORE</small><span id="score">0</span></div>
+ <div class="scorebox"><small>BEST</small><span id="best">0</span></div>
 </div>
 </header>
+
 <div class="topline">
 <strong>✨ 2048を目指そう！</strong>
 <button id="theme">🌙 ダーク</button>
 </div>
+
 <div class="actions">
 <button id="restart">新しく始める</button>
 <button id="export">⬇ セーブを書き出す</button>
 <button id="import">⬆ セーブを読み込む</button>
 <input id="file" class="file-input" type="file" accept=".json,application/json">
 </div>
+
+<h3>🔑 引き継ぎシステム</h3>
+<div class="actions">
+<button id="makeCode">🔑 引き継ぎコードを発行</button>
+<button id="copyCode">📋 コードをコピー</button>
+</div>
+<textarea id="saveCode" rows="4" placeholder="ここに引き継ぎコードが表示されるよ！別の端末のコードをここに貼り付けてもOK"></textarea>
+<div class="actions">
+<button id="loadCode">⬆ コードから引き継ぐ</button>
+</div>
+
 <section class="board-wrap">
 <div class="board" id="board"></div>
 <div class="overlay" id="overlay">
-<h2 id="ot"></h2><p id="om"></p>
+<h2 id="ot"></h2>
+<p id="om"></p>
 <button id="ob">もう一度遊ぶ</button>
 </div>
 </section>
+
 <div class="mobile-controls">
 <button data-dir="up">↑</button>
 <button data-dir="left">←</button>
 <button data-dir="down">↓</button>
 <button data-dir="right">→</button>
 </div>
+
 <div class="help">
 <strong>遊び方</strong><br>
-矢印キー・WASD・スマホのスワイプで操作。同じ数字を合わせると合体！豪華なエフェクト付き。<br>
-<strong>セーブ：</strong>書き出したJSONファイルを保存して、読み込みボタンから再開できるよ。ゲームはブラウザにも自動保存されるよ。
+矢印キー・WASD・スマホのスワイプで操作。同じ数字を合わせると合体！<br>
+<strong>セーブ：</strong>JSONファイルで書き出し・読み込みができるよ。<br>
+<strong>引き継ぎ：</strong>コードを発行してコピー。別の端末で入力すれば続きから遊べるよ！
 </div>
 <footer>2048 SPECIAL EDITION ✨</footer>
 </main>
+
 <script>
 (()=>{
-const N=4,KEY='2048-save-v3',BEST='2048-best',THEME='2048-theme';
-const el=id=>document.getElementById(id),wrap=document.querySelector('.board-wrap');
-let grid,score,best=+(localStorage.getItem(BEST)||0),over=false,won=false;
+const N=4;
+const KEY='2048-save-v3';
+const BEST='2048-best';
+const THEME='2048-theme';
+const el=id=>document.getElementById(id);
+const wrap=document.querySelector('.board-wrap');
+
+let grid,score,best=+(localStorage.getItem(BEST)||0);
+let over=false,won=false;
+
 const empty=()=>Array.from({length:N},()=>Array(N).fill(0));
 el('best').textContent=best;
 
 function valid(d){
-return d&&d.version===1&&Array.isArray(d.grid)&&d.grid.length===N&&
-d.grid.every(row=>Array.isArray(row)&&row.length===N&&row.every(v=>Number.isInteger(v)&&v>=0&&(v===0||(v&(v-1))===0)))&&
-Number.isFinite(d.score)&&d.score>=0&&Number.isFinite(d.best)&&d.best>=0&&
-typeof d.over==='boolean'&&typeof d.won==='boolean';
+ return d&&d.version===1&&Array.isArray(d.grid)&&
+ d.grid.length===N&&
+ d.grid.every(row=>Array.isArray(row)&&row.length===N&&
+ row.every(v=>Number.isSafeInteger(v)&&v>=0&&
+ (v===0||(v&(v-1))===0)))&&
+ Number.isFinite(d.score)&&d.score>=0&&
+ Number.isFinite(d.best)&&d.best>=0&&
+ typeof d.over==='boolean'&&typeof d.won==='boolean';
 }
+
 function autosave(){
-try{localStorage.setItem(KEY,JSON.stringify({version:1,grid,score,best,over,won}));}catch(e){}
+ try{
+ localStorage.setItem(KEY,JSON.stringify({
+ version:1,grid,score,best,over,won
+ }));
+ }catch(e){}
 }
+
 function spawn(){
-let a=[];
-for(let r=0;r<N;r++)for(let c=0;c<N;c++)if(!grid[r][c])a.push([r,c]);
-if(a.length){let [r,c]=a[Math.floor(Math.random()*a.length)];grid[r][c]=Math.random()<.9?2:4;}
+ let a=[];
+ for(let r=0;r<N;r++)for(let c=0;c<N;c++)
+ if(!grid[r][c])a.push([r,c]);
+ if(a.length){
+ let [r,c]=a[Math.floor(Math.random()*a.length)];
+ grid[r][c]=Math.random()<.9?2:4;
+ }
 }
+
 function fx(cell){
-let b=wrap.getBoundingClientRect(),r=cell.getBoundingClientRect();
-for(let i=0;i<9;i++){
-let p=document.createElement('i');p.className='particle';
-p.textContent=['✦','✨','★','✧'][i%4];
-p.style.left=(r.left-b.left+r.width/2)+'px';
-p.style.top=(r.top-b.top+r.height/2)+'px';
-p.style.setProperty('--dx',(Math.random()*100-50)+'px');
-p.style.setProperty('--dy',(Math.random()*100-50)+'px');
-wrap.append(p);setTimeout(()=>p.remove(),800);
+ let b=wrap.getBoundingClientRect();
+ let r=cell.getBoundingClientRect();
+ for(let i=0;i<9;i++){
+  let p=document.createElement('i');
+  p.className='particle';
+  p.textContent=['✦','✨','★','✧'][i%4];
+  p.style.left=(r.left-b.left+r.width/2)+'px';
+  p.style.top=(r.top-b.top+r.height/2)+'px';
+  p.style.setProperty('--dx',(Math.random()*100-50)+'px');
+  p.style.setProperty('--dy',(Math.random()*100-50)+'px');
+  wrap.append(p);
+  setTimeout(()=>p.remove(),800);
+ }
 }
-}
+
 function render(merges=[]){
-el('board').innerHTML='';
-for(let r=0;r<N;r++)for(let c=0;c<N;c++){
-let v=grid[r][c],x=document.createElement('div');
-let m=merges.some(p=>p[0]===r&&p[1]===c);
-x.className='cell'+(v>2048?' high':'')+(m?' merge-pop':'');
-if(v)x.dataset.value=v;
-x.textContent=v||'';
-el('board').append(x);
-if(m)fx(x);
+ el('board').innerHTML='';
+ for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+  let v=grid[r][c],x=document.createElement('div');
+  let m=merges.some(p=>p[0]===r&&p[1]===c);
+  x.className='cell'+(v>2048?' high':'')+(m?' merge-pop':'');
+  if(v)x.dataset.value=v;
+  x.textContent=v||'';
+  el('board').append(x);
+  if(m)fx(x);
+ }
+ el('score').textContent=score;
+ el('best').textContent=best;
+ if(merges.length){
+  wrap.classList.remove('merge-shake');
+  void wrap.offsetWidth;
+  wrap.classList.add('merge-shake');
+ }
 }
-el('score').textContent=score;
-el('best').textContent=best;
-if(merges.length){wrap.classList.remove('merge-shake');void wrap.offsetWidth;wrap.classList.add('merge-shake');}
-}
+
 function start(){
-grid=empty();score=0;over=won=false;
-el('overlay').classList.remove('show');
-spawn();spawn();render();autosave();
+ grid=empty();
+ score=0;
+ over=won=false;
+ el('overlay').classList.remove('show');
+ spawn();spawn();
+ render();
+ autosave();
 }
+
 function slide(a){
-let v=a.filter(Boolean),o=[],mi=[],gain=0;
-for(let i=0;i<v.length;i++){
-if(v[i]===v[i+1]){o.push(v[i]*2);mi.push(o.length-1);gain+=v[i]*2;i++;}
-else o.push(v[i]);
+ let v=a.filter(Boolean),o=[],mi=[],gain=0;
+ for(let i=0;i<v.length;i++){
+  if(v[i]===v[i+1]){
+   o.push(v[i]*2);
+   mi.push(o.length-1);
+   gain+=v[i]*2;
+   i++;
+  }else o.push(v[i]);
+ }
+ while(o.length<N)o.push(0);
+ return{line:o,mi,gain};
 }
-while(o.length<N)o.push(0);
-return{line:o,mi,gain};
-}
+
 function canMove(){
-for(let r=0;r<N;r++)for(let c=0;c<N;c++){
-if(!grid[r][c]||c<N-1&&grid[r][c]===grid[r][c+1]||r<N-1&&grid[r][c]===grid[r+1][c])return true;
+ for(let r=0;r<N;r++)for(let c=0;c<N;c++){
+  if(!grid[r][c]||
+   (c<N-1&&grid[r][c]===grid[r][c+1])||
+   (r<N-1&&grid[r][c]===grid[r+1][c]))return true;
+ }
+ return false;
 }
-return false;
-}
+
 function showOverlay(t,m,b,cont=false){
-el('ot').textContent=t;el('om').textContent=m;el('ob').textContent=b;
-el('ob').onclick=()=>{el('overlay').classList.remove('show');if(!cont)start();};
-el('overlay').classList.add('show');
+ el('ot').textContent=t;
+ el('om').textContent=m;
+ el('ob').textContent=b;
+ el('ob').onclick=()=>{
+  el('overlay').classList.remove('show');
+  if(!cont)start();
+ };
+ el('overlay').classList.add('show');
 }
+
 function move(dir){
-if(over)return;
-let next=empty(),gain=0,merges=[];
-for(let i=0;i<N;i++){
-let line=[];
-for(let j=0;j<N;j++)line.push(dir==='left'?grid[i][j]:dir==='right'?grid[i][N-1-j]:dir==='up'?grid[j][i]:grid[N-1-j][i]);
-let z=slide(line);gain+=z.gain;
-for(let j=0;j<N;j++){
-let r=dir==='left'||dir==='right'?i:dir==='up'?j:N-1-j;
-let c=dir==='up'||dir==='down'?i:dir==='left'?j:N-1-j;
-next[r][c]=z.line[j];
+ if(over)return;
+ let next=empty(),gain=0,merges=[];
+ for(let i=0;i<N;i++){
+  let line=[];
+  for(let j=0;j<N;j++){
+   line.push(
+    dir==='left'?grid[i][j]:
+    dir==='right'?grid[i][N-1-j]:
+    dir==='up'?grid[j][i]:grid[N-1-j][i]
+   );
+  }
+  let z=slide(line);
+  gain+=z.gain;
+  for(let j=0;j<N;j++){
+   let r=dir==='left'||dir==='right'?i:
+    dir==='up'?j:N-1-j;
+   let c=dir==='up'||dir==='down'?i:
+    dir==='left'?j:N-1-j;
+   next[r][c]=z.line[j];
+  }
+  z.mi.forEach(j=>{
+   let r=dir==='left'||dir==='right'?i:
+    dir==='up'?j:N-1-j;
+   let c=dir==='up'||dir==='down'?i:
+    dir==='left'?j:N-1-j;
+   merges.push([r,c]);
+  });
+ }
+ if(next.every((row,r)=>row.every((v,c)=>v===grid[r][c])))return;
+ grid=next;
+ score+=gain;
+ if(score>best){
+  best=score;
+  localStorage.setItem(BEST,best);
+ }
+ spawn();
+ render(merges);
+ autosave();
+
+ if(!won&&grid.some(row=>row.includes(2048))){
+  won=true;
+  autosave();
+  showOverlay('🎉 2048達成！','✨ おめでとう！すごい！ ✨','続けて遊ぶ',true);
+ }else if(!canMove()){
+  over=true;
+  autosave();
+  showOverlay('ゲームオーバー','もう一度チャレンジしてみよう！','もう一度遊ぶ');
+ }
 }
-z.mi.forEach(j=>{
-let r=dir==='left'||dir==='right'?i:dir==='up'?j:N-1-j;
-let c=dir==='up'||dir==='down'?i:dir==='left'?j:N-1-j;
-merges.push([r,c]);
-});
-}
-if(next.every((row,r)=>row.every((v,c)=>v===grid[r][c])))return;
-grid=next;score+=gain;
-if(score>best){best=score;localStorage.setItem(BEST,best);}
-spawn();render(merges);autosave();
-if(!won&&grid.some(row=>row.includes(2048))){
-won=true;autosave();showOverlay('🎉 2048達成！','✨ おめでとう！すごい！ ✨','続けて遊ぶ',true);
-}else if(!canMove()){
-over=true;autosave();showOverlay('ゲームオーバー','もう一度チャレンジしてみよう！','もう一度遊ぶ');
-}
-}
+
 function load(d){
-if(!valid(d))throw Error('セーブデータの形式が正しくありません。');
-grid=d.grid.map(r=>r.slice());score=d.score;
-best=Math.max(d.best,+(localStorage.getItem(BEST)||0));
-over=d.over;won=d.won;localStorage.setItem(BEST,best);
-el('overlay').classList.remove('show');render();autosave();
-if(over)showOverlay('ゲームオーバー','もう一度チャレンジしてみよう！','もう一度遊ぶ');
-else if(won)showOverlay('🎉 2048達成！','✨ おめでとう！すごい！ ✨','続けて遊ぶ',true);
+ if(!valid(d))throw Error('セーブデータの形式が正しくありません。');
+ grid=d.grid.map(r=>r.slice());
+ score=d.score;
+ best=Math.max(d.best,+(localStorage.getItem(BEST)||0));
+ over=d.over;
+ won=d.won;
+ localStorage.setItem(BEST,best);
+ el('overlay').classList.remove('show');
+ render();
+ autosave();
+ if(over)showOverlay('ゲームオーバー','もう一度チャレンジしてみよう！','もう一度遊ぶ');
+ else if(won)showOverlay('🎉 2048達成！','✨ おめでとう！すごい！ ✨','続けて遊ぶ',true);
 }
+
 function theme(d){
-document.body.classList.toggle('dark',d);
-el('theme').textContent=d?'☀️ ライト':'🌙 ダーク';
-localStorage.setItem(THEME,d?'dark':'light');
+ document.body.classList.toggle('dark',d);
+ el('theme').textContent=d?'☀️ ライト':'🌙 ダーク';
+ localStorage.setItem(THEME,d?'dark':'light');
 }
 theme(localStorage.getItem(THEME)==='dark');
 el('theme').onclick=()=>theme(!document.body.classList.contains('dark'));
 
-el('export').onclick=()=>{
-let data={version:1,grid,score,best,over,won,exportedAt:new Date().toISOString()};
-let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-let url=URL.createObjectURL(blob),a=document.createElement('a');
-a.href=url;a.download='2048-save-'+new Date().toISOString().slice(0,10)+'.json';
-a.click();URL.revokeObjectURL(url);
+/* 引き継ぎコード */
+function makeTransferCode(){
+ const data={version:1,grid,score,best,over,won};
+ const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(data))))
+  .replace(/\+/g,'-')
+  .replace(/\//g,'_')
+  .replace(/=+$/,'');
+ return '2048-'+encoded;
+}
+
+el('makeCode').onclick=()=>{
+ el('saveCode').value=makeTransferCode();
+ el('saveCode').focus();
+ el('saveCode').select();
 };
+
+el('copyCode').onclick=async()=>{
+ const code=el('saveCode').value.trim();
+ if(!code){
+  alert('先に引き継ぎコードを発行してね！');
+  return;
+ }
+ try{
+  await navigator.clipboard.writeText(code);
+  alert('引き継ぎコードをコピーしたよ！');
+ }catch(e){
+  el('saveCode').focus();
+  el('saveCode').select();
+  alert('コードを選択したよ。コピーしてね！');
+ }
+};
+
+el('loadCode').onclick=()=>{
+ try{
+  const code=el('saveCode').value.trim();
+  if(!code.startsWith('2048-'))throw Error('引き継ぎコードの形式が違います。');
+  const raw=code.slice(5).replace(/-/g,'+').replace(/_/g,'/');
+  const padded=raw+'='.repeat((4-raw.length%4)%4);
+  const json=decodeURIComponent(escape(atob(padded)));
+  load(JSON.parse(json));
+  alert('引き継ぎ成功！続きから遊べるよ！');
+ }catch(e){
+  alert(e.message||'コードを読み込めませんでした。');
+ }
+};
+
+/* セーブ書き出し */
+el('export').onclick=()=>{
+ let data={version:1,grid,score,best,over,won,exportedAt:new Date().toISOString()};
+ let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+ let url=URL.createObjectURL(blob);
+ let a=document.createElement('a');
+ a.href=url;
+ a.download='2048-save-'+new Date().toISOString().slice(0,10)+'.json';
+ a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+
+/* セーブ読み込み */
 el('import').onclick=()=>el('file').click();
 el('file').onchange=async e=>{
-let f=e.target.files[0];if(!f)return;
-try{load(JSON.parse(await f.text()));alert('セーブデータを読み込みました！');}
-catch(err){alert(err.message||'読み込みに失敗しました。');}
-e.target.value='';
+ let f=e.target.files[0];
+ if(!f)return;
+ try{
+  load(JSON.parse(await f.text()));
+  alert('セーブデータを読み込みました！');
+ }catch(err){
+  alert(err.message||'読み込みに失敗しました。');
+ }
+ e.target.value='';
 };
-const keys={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',s:'down',a:'left',d:'right'};
+
+/* 操作 */
+const keys={
+ ArrowUp:'up',ArrowDown:'down',
+ ArrowLeft:'left',ArrowRight:'right',
+ w:'up',s:'down',a:'left',d:'right'
+};
 document.addEventListener('keydown',e=>{
-if(keys[e.key]){e.preventDefault();move(keys[e.key]);}
-else if(e.key.toLowerCase()==='r')start();
+ if(keys[e.key]){
+  e.preventDefault();
+  move(keys[e.key]);
+ }else if(e.key.toLowerCase()==='r'){
+  start();
+ }
 });
-el('restart').onclick=()=>{if(confirm('今のゲームをリセットして新しく始める？'))start();};
-document.querySelectorAll('[data-dir]').forEach(b=>b.onclick=()=>move(b.dataset.dir));
+
+el('restart').onclick=()=>{
+ if(confirm('今のゲームをリセットして新しく始める？'))start();
+};
+
+document.querySelectorAll('[data-dir]').forEach(b=>{
+ b.onclick=()=>move(b.dataset.dir);
+});
+
 let touch=null;
-wrap.addEventListener('touchstart',e=>{let t=e.changedTouches[0];touch=[t.clientX,t.clientY];},{passive:true});
-wrap.addEventListener('touchend',e=>{
-if(!touch)return;
-let t=e.changedTouches[0],dx=t.clientX-touch[0],dy=t.clientY-touch[1];touch=null;
-if(Math.max(Math.abs(dx),Math.abs(dy))<24)return;
-move(Math.abs(dx)>Math.abs(dy)?dx>0?'right':'left':dy>0?'down':'up');
+wrap.addEventListener('touchstart',e=>{
+ let t=e.changedTouches[0];
+ touch=[t.clientX,t.clientY];
 },{passive:true});
-try{let d=JSON.parse(localStorage.getItem(KEY)||'null');if(valid(d))load(d);else start();}
-catch(e){start();}
+
+wrap.addEventListener('touchend',e=>{
+ if(!touch)return;
+ let t=e.changedTouches[0];
+ let dx=t.clientX-touch[0],dy=t.clientY-touch[1];
+ touch=null;
+ if(Math.max(Math.abs(dx),Math.abs(dy))<24)return;
+ move(Math.abs(dx)>Math.abs(dy)?
+  (dx>0?'right':'left'):
+  (dy>0?'down':'up'));
+},{passive:true});
+
+/* 自動セーブから復元 */
+try{
+ let d=JSON.parse(localStorage.getItem(KEY)||'null');
+ if(valid(d))load(d);
+ else start();
+}catch(e){
+ start();
+}
 })();
 </script>
 </body>
